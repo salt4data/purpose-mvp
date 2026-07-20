@@ -1,5 +1,6 @@
 import "./style.css";
 import { supabase } from "./supabase";
+import { BusinessCard } from "./components/BusinessCard";
 
 async function loadBusinesses() {
   const { data, error } = await supabase
@@ -16,20 +17,7 @@ async function loadBusinesses() {
     <h2>Black-Owned Businesses</h2>
 
     <ul>
-      ${data
-        .map(
-          (business) => `
-          <li>
-            <strong>${business.business_name}</strong><br>
-            <p>${business.description}</p>
-            <p><strong>Category:</strong> ${business.category}</p>
-            <p><strong>Location:</strong> ${business.city}, ${business.state}</p>
-            <p><strong>Verified:</strong> ${business.is_verified ? "✅ Yes" : "❌ No"}</p>
-            <a href="${business.website}" target="_blank">${business.website}</a>
-          </li>
-        `
-        )
-        .join("")}
+      ${data.map(BusinessCard).join("")}
     </ul>
   `;
 }
