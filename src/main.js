@@ -14,7 +14,7 @@ async function loadBusinesses() {
 
   const businesses = data;
 
-  function render(list) {
+  function render(list, search = "") {
     document.querySelector("#app").innerHTML = `
       <h1>Purpose MVP</h1>
       <h2>Black-Owned Businesses</h2>
@@ -36,24 +36,35 @@ async function loadBusinesses() {
         "
       />
 
-      <ul>
-        ${list.map(BusinessCard).join("")}
-      </ul>
+      ${
+        list.length === 0
+          ? `<p>No businesses found.</p>`
+          : `
+            <ul>
+              ${list.map(BusinessCard).join("")}
+            </ul>
+          `
+      }
     `;
 
     const searchInput = document.querySelector("#search");
+    searchInput.value = search;
+    searchInput.focus();
 
     searchInput.addEventListener("input", (event) => {
       const search = event.target.value.toLowerCase();
 
-      const filtered = businesses.filter((business) =>
-        business.business_name.toLowerCase().includes(search)
-      );
+      const filtered = businesses.filter((business) => {
+        const text = `
+          ${business.business_name}
+          ${business.description}
+          ${business.category}
+        `.toLowerCase();
 
-      render(filtered);
+        return text.includes(search);
+      });
 
-      document.querySelector("#search").value = search;
-      document.querySelector("#search").focus();
+      render(filtered, search);
     });
   }
 
