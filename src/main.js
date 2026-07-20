@@ -12,14 +12,52 @@ async function loadBusinesses() {
     return;
   }
 
-  document.querySelector("#app").innerHTML = `
-    <h1>Purpose MVP</h1>
-    <h2>Black-Owned Businesses</h2>
+  const businesses = data;
 
-    <ul>
-      ${data.map(BusinessCard).join("")}
-    </ul>
-  `;
+  function render(list) {
+    document.querySelector("#app").innerHTML = `
+      <h1>Purpose MVP</h1>
+      <h2>Black-Owned Businesses</h2>
+
+      <input
+        type="text"
+        id="search"
+        placeholder="🔍 Search businesses..."
+        style="
+          width: 100%;
+          padding: 12px;
+          margin: 20px 0;
+          border-radius: 8px;
+          border: 1px solid #4b5563;
+          background: #1f2937;
+          color: white;
+          font-size: 16px;
+          box-sizing: border-box;
+        "
+      />
+
+      <ul>
+        ${list.map(BusinessCard).join("")}
+      </ul>
+    `;
+
+    const searchInput = document.querySelector("#search");
+
+    searchInput.addEventListener("input", (event) => {
+      const search = event.target.value.toLowerCase();
+
+      const filtered = businesses.filter((business) =>
+        business.business_name.toLowerCase().includes(search)
+      );
+
+      render(filtered);
+
+      document.querySelector("#search").value = search;
+      document.querySelector("#search").focus();
+    });
+  }
+
+  render(businesses);
 }
 
 loadBusinesses();
