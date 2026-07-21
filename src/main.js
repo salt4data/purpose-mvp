@@ -59,6 +59,7 @@ async function loadBusinesses() {
           ${business.business_name}
           ${business.description}
           ${business.category}
+          ${Array.isArray(business.tags) ? business.tags.join(", ") : business.tags}
         `.toLowerCase();
 
         return text.includes(search);
